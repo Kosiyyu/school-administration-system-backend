@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class StudyGroupService {
+public class StudyGroupService implements ServiceInterface<StudyGroup>{
     private final StudyGroupRepository studyGroupRepository;
     private final StudentRepository studentRepository;
 

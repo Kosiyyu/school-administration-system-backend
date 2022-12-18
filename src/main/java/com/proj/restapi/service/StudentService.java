@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class StudentService {
+public class StudentService implements ServiceInterface<Student>{
     private final StudentRepository studentRepository;
 
     public StudentService(StudentRepository studentRepository) {
@@ -22,8 +22,9 @@ public class StudentService {
         return studentRepository.findById(id).get();
     }
 
-    public void save(Student student) {
+    public Student save(Student student) {
         studentRepository.save(student);
+        return student;
     }
 
     public void update(long id, Student student) {

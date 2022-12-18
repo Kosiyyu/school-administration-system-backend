@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SubjectService {
+public class SubjectService implements ServiceInterface<Subject> {
     private SubjectRepository subjectRepository;
 
     public SubjectService(SubjectRepository subjectRepository) {
