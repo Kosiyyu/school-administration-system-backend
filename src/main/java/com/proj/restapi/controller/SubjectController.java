@@ -32,7 +32,7 @@ public class SubjectController {
             subject = subjectService.findById(id);
         }
         catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.OK, "Subject not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Subject not found");
         }
         return new ResponseEntity<>(subject, HttpStatus.OK);
     }
@@ -45,7 +45,12 @@ public class SubjectController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable long id){
-        subjectService.delete(id);
+        try {
+            subjectService.delete(id);
+        }
+        catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Subject not found");
+        }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
