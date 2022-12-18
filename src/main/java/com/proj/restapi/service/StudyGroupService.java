@@ -38,9 +38,10 @@ public class StudyGroupService {
         return studyGroup;
     }
 
-    public void update(long id, StudyGroup studyGroup) {
+    public StudyGroup update(long id, StudyGroup studyGroup) {
         StudyGroup s = studyGroupRepository.findById(id).get();
         studyGroupRepository.save(s);
+        return s;
     }
 
     public void delete(long id) {
