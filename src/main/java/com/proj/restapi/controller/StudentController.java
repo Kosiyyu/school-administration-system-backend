@@ -3,7 +3,9 @@ package com.proj.restapi.controller;
 import com.proj.restapi.model.Student;
 import com.proj.restapi.service.StudentService;
 import com.proj.restapi.service.StudyGroupService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,6 +25,41 @@ public class StudentController {
         this.studentService = studentService;
         this.studyGroupService = studyGroupService;
     }
+
+    @GetMapping("/students/download")
+    public ResponseEntity<String> getStudentsAsCsv() {
+        // Set the response headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        headers.setContentDispositionFormData("attachment", "students.csv");
+
+        // Create the CSV data as a string
+        StringBuilder csvData = new StringBuilder();
+        csvData.append("ID,First Name,Last Name,Birthday Date,Address,Email,Telephone Number,Study Group ID\n");
+        List<Student> students = studentService.findAll();
+        for (Student student : students) {
+            csvData.append(student.getId())
+                    .append(",")
+                    .append(student.getFirstname())
+                    .append(",")
+                    .append(student.getLastname())
+                    .append(",")
+                    .append(student.getBirthdayDate())
+                    .append(",")
+                    .append(student.getAddress())
+                    .append(",")
+                    .append(student.getEmail())
+                    .append(",")
+                    .append(student.getTelephoneNumber())
+                    .append(",")
+                    .append(student.getStudyGroup().getId())
+                    .append("\n");
+        }
+
+        // Return the CSV data as the response
+        return new ResponseEntity<>(csvData.toString(), headers, HttpStatus.OK);
+    }
+
 
     @GetMapping("/students")
     public ResponseEntity<List<Student>> getAll() {

@@ -2,7 +2,9 @@ package com.proj.restapi.controller;
 
 import com.proj.restapi.model.Rating;
 import com.proj.restapi.service.RatingService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,6 +21,35 @@ public class RatingController {
     public RatingController(RatingService ratingService) {
         this.ratingService = ratingService;
     }
+
+    @GetMapping("/ratings/download")
+    public ResponseEntity<String> getRatingsAsCsv() {
+        // Set the response headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        headers.setContentDispositionFormData("attachment", "ratings.csv");
+
+        // Create the CSV data as a string
+        StringBuilder csvData = new StringBuilder();
+        csvData.append("ID,Student ID,Grade,Content,Subject ID\n");
+        List<Rating> ratings = ratingService.findAll();
+        for (Rating rating : ratings) {
+            csvData.append(rating.getId())
+                    .append(",")
+                    .append(rating.getStudent().getId())
+                    .append(",")
+                    .append(rating.getGrade())
+                    .append(",")
+                    .append(rating.getContent())
+                    .append(",")
+                    .append(rating.getSubject().getId())
+                    .append("\n");
+        }
+
+        // Return the CSV data as the response
+        return new ResponseEntity<>(csvData.toString(), headers, HttpStatus.OK);
+    }
+
 
     @GetMapping("/ratings")
     public ResponseEntity<List<Rating>> findAll(){

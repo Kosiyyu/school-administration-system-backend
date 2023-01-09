@@ -20,45 +20,29 @@ public class LessonUnitController {
         this.lessonUnitService = lessonUnitService;
     }
 
-    public ResponseEntity<List<LessonUnit>> findAll(){
-        List<LessonUnit> lessonUnits = lessonUnitService.findAll();
-        return new ResponseEntity<>(lessonUnits, HttpStatus.OK);
+
+
+    @GetMapping("/lessonUnits")
+    public ResponseEntity<List<LessonUnit>> findAll() {
+        return new ResponseEntity<>(lessonUnitService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/lessonUnits/{id}")
-    public ResponseEntity<LessonUnit> findById(@PathVariable long id){
-        LessonUnit lessonUnit = null;
-
-        try {
-            lessonUnit = lessonUnitService.findById(id);
-        }
-        catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
-        }
-
-        return new ResponseEntity<>(lessonUnit, HttpStatus.OK);
+    public ResponseEntity<LessonUnit> findById(@PathVariable long id) {
+        return lessonUnitService.findById(id)
+                .map(lessonUnit -> new ResponseEntity<>(lessonUnit, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/lessonUnits/{studyGroupId}/{subjectId}")
-    public ResponseEntity<LessonUnit> save(@RequestBody LessonUnit lessonUnit, @PathVariable long studyGroupId, @PathVariable long subjectId){
-        try {
-            lessonUnitService.save(lessonUnit, studyGroupId, subjectId);
-        }
-        catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
-        }
-        return new ResponseEntity<>(lessonUnit,HttpStatus.CREATED);//on chyba nie bedzie mial subjecta i studyGroup zwracanego ;\\, czhyba raczej tak xd i tak wszedzie jest
+    public ResponseEntity<LessonUnit> save(@RequestBody LessonUnit lessonUnit, @PathVariable long studyGroupId, @PathVariable long subjectId) {
+        LessonUnit savedLessonUnit = lessonUnitService.save(lessonUnit, studyGroupId, subjectId);
+        return new ResponseEntity<>(savedLessonUnit, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/lessonUnits/{id}")
-    public ResponseEntity<Rating> delete(@PathVariable long id){
-        try{
-            lessonUnitService.delete(id);
-        }
-        catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
-        }
+    public ResponseEntity<Void> deleteById(@PathVariable long id) {
+        lessonUnitService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }

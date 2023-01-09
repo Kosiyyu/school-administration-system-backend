@@ -9,9 +9,10 @@ import com.proj.restapi.repository.SubjectRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class LessonUnitService implements ServiceInterface<LessonUnit>{
+public class LessonUnitService {
 
     private LessonUnitRepository lessonUnitRepository;
 
@@ -25,22 +26,12 @@ public class LessonUnitService implements ServiceInterface<LessonUnit>{
         this.subjectRepository = subjectRepository;
     }
 
-    @Override
     public List<LessonUnit> findAll() {
-        List<LessonUnit> lessonUnits = lessonUnitRepository.findAll();
-        return lessonUnits;
+        return lessonUnitRepository.findAll();
     }
 
-    @Override
-    public LessonUnit findById(long id) {
-        LessonUnit lessonUnit = lessonUnitRepository.findById(id).get();
-        return lessonUnit;
-    }
-
-    @Override
-    public LessonUnit save(LessonUnit lessonUnit) {
-        lessonUnitRepository.save(lessonUnit);
-        return lessonUnit;
+    public Optional<LessonUnit> findById(long id) {
+        return lessonUnitRepository.findById(id);
     }
 
     public LessonUnit save(LessonUnit lessonUnit, long studyGroupId, long subjectId) {
@@ -52,9 +43,7 @@ public class LessonUnitService implements ServiceInterface<LessonUnit>{
         return lessonUnit;
     }
 
-    @Override
-    public void delete(long id) {
-        LessonUnit lessonUnit = lessonUnitRepository.findById(id).get();
-        lessonUnitRepository.delete(lessonUnit);
+    public void deleteById(long id) {
+        lessonUnitRepository.deleteById(id);
     }
 }
